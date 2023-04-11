@@ -1,1 +1,1 @@
-# Pelatihan Data Analyst KOMINFO 
+# Pelatihan Data Analyst KOMINFO DQLab

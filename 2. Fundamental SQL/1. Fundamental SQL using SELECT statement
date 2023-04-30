@@ -1,0 +1,84 @@
+# FUNDAMENTAL SQL USING SELECT STATEMENT #
+
+#Mengambil Seluruh Kolom dalam suatu Tabel
+SELECT * FROM ms_produk;
+
+#Mengambil Satu Kolom dari Tabel
+SELECT nama_produk FROM ms_produk;
+
+#Mengambil Lebih dari Satu Kolom dari Tabel
+SELECT nama_produk, harga FROM ms_produk;
+
+
+# Membatasi Jumlah Pengambilan Row Data
+SELECT nama_produk, harga FROM ms_produk LIMIT 5;
+
+
+### PREFIX DAN ALIAS ### 
+
+
+# Menggunakan Prefix pada Nama Kolom
+SELECT ms_produk.kode_produk from ms_produk
+
+# Menggunakan Alias pada Kolom
+# mengubah identitas nama kolom yang diambil dengan SELECT dengan menggunakan keyword AS. Ini dinamakan alias.
+# Perubahan nama tabel bersifat temporary, artinya hanya berubah ketika mengambil/meng-query data
+# sedangkan nama kolom di tabel dalam database tidak akan berubah.
+SELECT no_urut AS nomor, nama_produk AS nama FROM ms_produk
+
+# Menghilangkan Keyword 'AS'
+# Ubah nama kolom dari tabel ms_produk tanpa menggunakan Alias no_urut menjadi nomor, nama_produk menjadi nama.
+SELECT no_urut nomor, nama_produk nama FROM ms_produk
+
+# Menggabungkan Prefix dan Alias
+# Tampilkan kolom harga dari tabel ms_produk dengan nama alias harga_jual lengkap dengan prefix.
+SELECT ms_produk.harga AS harga_jual FROM ms_produk
+
+# Menggunakan Alias pada Tabel
+# Ganti nama tabel ms_produk menjadi t2 dan tampilkan seluruh isinya tanpa menggunakan keyword AS.
+SELECT * FROM ms_produk t2
+
+# Prefix dengan Alias Tabel
+# Gantilah perintah pada code editor dengan nama alias t2 - tanpa menggunakan keyword AS - untuk tabel ms_produk
+# menampilkan kolom nama_produk dan harga, lengkap dengan prefix alias.
+SELECT t2.nama_produk, t2.harga FROM ms_produk t2
+
+
+### MENGGUNAKAN FILTER ###
+
+
+# Penggunaan SELECT DISTINCT statement
+# Untuk menghilangkan data duplikasi, aku bisa menggunakan SELECT DISTINCT statement.
+# Dengan SELECT DISTINCT, data yang sama atau duplikat akan dieliminasi dan akan ditampilkan data yang unik saja.
+SELECT DISTINCT nama_customer, alamat FROM ms_pelanggan;
+
+# Menggunakan WHERE
+# Klausul WHERE dari SELECT digunakan untuk memfilter data berdasarkan kondisi tertentu.
+SELECT * FROM ms_produk WHERE nama_produk = 'Tas Travel Organizer DQLab';
+
+# Menggunakan Operand OR
+# bagaimana jika ingin mengeluarkan kedua data hasil filter teks sekaligus
+SELECT * FROM ms_produk WHERE nama_produk = 'Flashdisk DQLab 64 GB' OR nama_produk = 'Tas Travel Organizer DQLab' OR nama_produk = 'Gantungan Kunci DQLab';
+
+# Filter untuk Angka
+SELECT * FROM ms_produk WHERE harga > 50000
+
+# Menggunakan Operand AND
+# menggunakan operand AND agar dua atau lebih kondisi terpenuhi semuanya. 
+# Jika salah satu kondisi tidak terpenuhi, data tidak akan diambil. 
+SELECT * FROM ms_produk WHERE harga < 50000 AND nama_produk = 'Gantungan Kunci DQLab'
+
+
+### MINI QUIZ ###
+
+'''
+“Jadi, apakah kamu bisa menyiapkan data transaksi penjualan dengan total revenue >= IDR 100.000? 
+Format datanya yang akan kamu tampilkan adalah: kode_pelanggan, nama_produk, qty, harga, dan total, serta diurutkan mulai dari total revenue terbesar,” pinta Senja padaku.
+Kalau kasusnya seperti ini, berarti aku perlu meng-query data tersebut dari tabel tr_penjualan yang terdapat di database perusahaan.
+Aku dapat melakukan
+    perkalian antara kolom qty dan harga untuk memperoleh total revenue setiap kode pelanggan yang dinyatakan ke dalam kolom total, dan
+    menggunakan “ORDER BY total DESC” pada akhir query untuk mengurutkan data.
+Aku pun menerima tantangan proyek ini! Senja pun segera mengirim detailnya melalui email yang berisi contoh tabel sebagai berikut untuk segera kukerjakan.
+'''
+
+SELECT kode_pelanggan, nama_produk, qty, harga, (qty*harga) AS total FROM tr_penjualan WHERE qty*harga >= 100000 ORDER BY total DESC ;

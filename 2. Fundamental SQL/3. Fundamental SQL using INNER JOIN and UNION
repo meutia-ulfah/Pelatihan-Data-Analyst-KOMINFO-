@@ -1,0 +1,139 @@
+### PENGGABUNGAN TABEL DARI RELASI KOLOM ###
+
+
+# Key Columns
+# Apabila terdapat hubungan / relasi pada kedua kolom yang mau digabungkan
+# mempraktekkan penggabungan tabel ms_item_kategori dan ms_item_warna menggunakan key columns.
+
+SELECT * FROM ms_item_kategori, ms_item_warna
+WHERE nama_barang = nama_item
+
+# Perlu diketahui bahwa penggabungan ini bersifat sementara artinya tabel asli di database tidak mengalami perubahan,
+# dan tabel baru hasil penggabungan ini juga tidak serta merta tersimpan di database.  
+
+# Jika urutan Tabel diubah
+# Jika akan mengubah urutan tabel di bagian FROM pada query inner join,
+# maka hanya urutan kolom saja yang berubah tetapi isi data dan jumlah data tidak berubah.
+
+SELECT * FROM ms_item_warna, ms_item_kategori
+WHERE nama_barang = nama_item
+# Hal ini sesuai dengan urutan nama tabel yang diketikkan setelah FROM.
+
+# Menggunakan Prefix Nama Tabel
+
+'''
+Seperti yang dijelaskan sebelumnya, jika akan menggunakan wildcard (*), dan tidak menentukan spesifik nama kolom yang akan dimunculkan di bagian SELECT,
+maka secara default urutan kolom dimulai dengan kolom dari tabel yang dinyatakan pertama di bagian FROM.
+Akan tetapi, bisa juga memanfaatkan wildcard dengan menambahkan prefix nama tabel, dimana dengan merinci prefix nama tabel ini, 
+dimungkinkan untuk menentukan urutan kolom dari tabel mana yang muncul duluan.
+'''
+# contoh, jika akan menggabungkan kedua tabel, dengan menyatakan tabel ms_item_warna terlebih dahulu di bagian FROM, 
+# tetapi yang ingin dimunculkan kolomnya di awal hasil adalah dari yang ms_item_kategori
+
+SELECT ms_item_kategori.*, ms_item_warna.*
+FROM ms_item_warna, ms_item_kategori
+WHERE nama_barang = nama_item
+
+
+### INNER JOIN ###
+
+# Tugas praktik
+
+# sebelumnya kan kita sudah menerapkan penggunaan … WHERE …; dari perintah SELECT … dan operator koma, untuk penggabungan tabel ms_item_warna dan ms_item_kategori.
+# Selanjutnya, ini kita akan menggunakan klausa INNER JOIN … ON …; untuk menggabungkan kedua ms_item_warna dan ms_item_kategori berdasarkan sintaks INNER JOIN 
+
+SELECT * FROM ms_item_warna
+INNER JOIN ms_item_kategori
+ON ms_item_warna.nama_barang = ms_item_kategori.nama_item;
+# Hasil yang diperoleh dengan penggunaan SELECT … FROM … INNER JOIN … ON …; adalah sama dengan penerapan SELECT … FROM … WHERE …;.
+
+
+# Syntax Inner Join - Memilih Beberapa Kolom Untuk Ditampilkan
+
+# Bagian query menghendaki pemilihan kolom mana saja dari kedua tabel yang akan digabungkan. Disini diperlukan penggunaan prefix nama tabelnya.
+SELECT tabel1.nama_kolom1, tabel1.nama_kolom2, ..., tabel2.nama_kolom2, .... 
+FROM tabel1
+
+# Selanjutnya, bagian query digunakan untuk menggabungkan tabel1 dengan tabel2.
+ INNER JOIN tabel2
+
+# bagian query adalah acuan penggabungan tabel1 dan tabel2 berdasarkan kolom yang memiliki tingkat kecocokan yang tinggi. Kedua kolom dengan tingkat kecocokan yang tinggi pada masing-masing tabel disebut juga dengan key column. 
+ON tabel_1.nama_kolom1 = tabel2.nama_kolom1;
+
+# Tugas Praktik
+'''
+dipraktikkan pada code editor untuk menggabungkan tabel tr_penjualan dan ms_produk dengan kolom yang ditampilkan dari tabel tr_penjualan adalah kode_transaksi, kode_pelanggan, kode_produk, qty. 
+Untuk tabel ms_produk tampilkan kolom nama_produk dan harga
+'''
+
+SELECT tr_penjualan.kode_transaksi, tr_penjualan.kode_pelanggan, tr_penjualan.kode_produk, tr_penjualan.qty, ms_produk.nama_produk, ms_produk.harga, ms_produk.harga * tr_penjualan.qty AS 'total'
+FROM tr_penjualan
+INNER JOIN ms_produk
+ON tr_penjualan.kode_produk = ms_produk.kode_produk;
+
+
+### UNION ###
+'''
+UNION adalah operator SQL yang digunakan untuk menggabungkan hasil dari 2 atau lebih SELECT - statement secara “Vertikal”, dengan catatan
+
+    Setiap hasil dari SELECT statement yang akan digabungkan (UNION) memiliki jumlah kolom yang sama
+    Kolom tersebut juga harus memiliki tipe data yang sama, dan
+    Kolom tersebut memiliki urutan posisi yang sama.
+'''
+
+# Menggunakan UNION dengan Klausa WHERE
+SELECT * FROM tabel_A
+WHERE kode_pelanggan = 'dqlabcust03'
+UNION
+SELECT * FROM tabel_B
+WHERE kode_pelanggan = 'dqlabcust03'
+# contoh lain
+SELECT CustomerName, ContactName, City, PostalCode 
+FROM Customers 
+UNION 
+SELECT SupplierName, ContactName, City, PostalCode 
+FROM Suppliers;
+
+# Perbedaan union dan join, 
+# union ( secara vertikal, tidak diperlukan key/kolom yang saling terkait, UNION mensyaratkan jumlah kolom dari tabel yang akan digabungkankan sama dan berada diposisi yang sama pula.)
+# join ( secara horizontal, berdasarkan key/kolom yang saling terkait )
+
+
+
+### MINI PROJECT ###
+
+
+
+#PROJECT INNER JOIN
+'''
+Dalam database, terdapat tabel ms_pelanggan yang berisi data - data pelanggan yang membeli produk
+dan tabel tr_penjualan yang berisi data transaksi pembelian di suatu store.
+
+Suatu hari, departemen marketing & promotion meminta bantuan untuk meng-query data-data pelanggan
+yang membeli produk Kotak Pensil DQLab, Flashdisk DQLab 32 GB, dan Sticky Notes DQLab 500 sheets.
+
+Buatlah query menggunakan tabel ms_pelanggan dan tr_penjualan untuk mendapatkan
+data - data yang diminta oleh marketing yaitu kode_pelanggan, nama_customer, alamat.
+'''
+
+SELECT DISTINCT ms_pelanggan.kode_pelanggan, ms_pelanggan.nama_customer, ms_pelanggan.alamat FROM ms_pelanggan
+INNER JOIN tr_penjualan
+ON ms_pelanggan.kode_pelanggan = tr_penjualan.kode_pelanggan
+WHERE tr_penjualan.nama_produk = 'Kotak Pensil DQLab' OR tr_penjualan.nama_produk = 'Flashdisk DQLab 32 GB' OR tr_penjualan.nama_produk = 'Sticky Notes DQLab 500 sheets';
+
+#PROJECT UNION
+'''
+Persiapkanlah data katalog mengenai mengenai nama - nama produk yang akan dijual di suatu store.
+Data tersebut akan digunakan dalam meeting untuk mereview produk mana saja dan tidak yang akan dilanjutkan penjualannya.
+
+Siapkan hanya data produk dengan harga di bawah 100K untuk kode produk prod-1 sampai prod-5; 
+dan dibawah 50K untuk kode produk prod-6 sampai prod-10, tanpa mencantumkan kolom no_urut.
+
+Saat mengecek data produk di database, terdapat 2 tabel yang sama - sama berisi data katalog, yaitu : no_urut, kode_produk, nama_produk, harga
+'''
+
+SELECT nama_produk, kode_produk, harga FROM ms_produk_1 
+WHERE harga < 100000
+UNION
+SELECT nama_produk, kode_produk, harga FROM ms_produk_2 
+WHERE harga < 50000;

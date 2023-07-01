@@ -1,0 +1,152 @@
+### PENGENALAN LIBRARY DALAM PYTHON ###
+'''
+Library pada Python merupakan kumpulan code yang bersifat open-source yang dapat dipanggil ke dalam Python dan digunakan untuk membantu komputasi. 
+
+>Library NumPy 
+Numpy berasal dari kata ‘Numerical Python’,berfungsi sebagai library untuk melakukan proses komputasi numerik terutama dalam bentuk array multidimensional (1-Dimensi ataupun 2-Dimensi).
+Array merupakan kumpulan dari variabel yang memiliki tipe data yang sama. NumPy menyimpan data dalam bentuk arrays.
+
+> Library Pandas
+Pandas merupakan library yang memudahkan dalam melakukan manipulasi, cleansing maupun analisis struktur data. Dengan menggunakan Pandas,
+dapat memanfaatkan lima fitur utama dalam pemrosesan dan analisis data, yaitu load, prepare, manipulate, modelling, dan analysis data.
+
+Pandas menggunakan konsep array dari NumPy namun memberikan index kepada array tersebut, sehingga disebut series ataupun data frame.
+ Sehingga bisa dikatakan Pandas menyimpan data dalam dictionary-based NumPy arrays.
+ 1-Dimensi labelled array dinamakan sebagai Series. Sedangkan 2-Dimensi dinamakan sebagai Data Frame.
+
+> Library SciPy
+Scipy dibangun untuk bekerja dengan array NumPy dan menyediakan banyak komputasi numerik yang ramah pengguna dan efisien seperti rutinitas untuk integrasi, diferensiasi dan optimasi numerik.
+
+> Library Matplotlib
+Matplotlib merupakan library dari Python yang umum digunakan untuk visualisasi data. Matplotlib memiliki kapabilitas untuk membuat visualisasi data 2-dimensional.
+ Contoh visualisasi yang dapat dibuat dengan menggunakan matplotlib diantaranya adalah
+
+    Line chart
+    Bar chart
+    Pie chart
+    Box plot chart
+    Violin chart
+    Errorbar chart
+    Scatter chart
+'''
+
+
+### EXPLORATORY DATA ANALYSIS DENGAN PANDAS PART 1 ###
+
+# Tugas Praktik
+
+# tambahan quick summary dari segi kuantitas, harga, freight value, dan weight yang dibeli konsumen.
+# Ada juga nih median dari total pembelian konsumen per transaksi.
+
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Quick summary  dari segi kuantitas, harga, freight value, dan weight
+print(order_df.describe())
+# Median dari total pembelian konsumen per transaksi kolom price
+print(order_df.loc[:, "price"].median)
+
+
+### EXPLORATORY DATA ANALYSIS DENGAN PANDAS PART 2 ###
+
+
+# Tugas Praktik Membuat Distribusi Data dengan Histogram
+
+# buatkan price distributionnya juga ya dari pembelian produk di cabang tadi.Bikin saja dalam bentuk histogram price
+import pandas as pd
+import matplotlib.pyplot as plt
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# plot histogram kolom: price
+order_df[[price]].hist(figsize=(4, 5), bins=10, xlabelsize=8, ylabelsize=8)
+plt.show()  # Untuk menampilkan histogram plot
+
+
+# Tugas Praktik Standar Deviasi dan Varians pada Pandas
+
+# Tolong tampilkan data persebaran dari product_weight_gram penjualan cabang
+
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Standar variasi kolom product_weight_gram
+(order_df.loc[:, "product_weight_gram"].std())
+# Varians kolom product_weight_gram
+(order_df.loc[:, "product_weight_gram"].var())
+
+
+# Tugas Praktik Menemukan Outliers dengan Panda
+
+# menentukan outliers bagi kolom product_weight_gram. 
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Hitung quartile 1
+Q1 = order_df[["product_weight_gram"]].quantile(0.25)
+# Hitung quartile 3
+Q3 = order_df[["product_weight_gram"]].quantile(0.75)
+# Hitung inter quartile range dan cetak ke console
+IQR = Q3 - Q1
+print(IQR)
+
+
+# Tugas Praktik Rename Kolom Data Frame
+
+# mengubah kolom freight_value menjadi shipping_cost dalam data frame order_df, dengan menggunakan fungsi rename().
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Ganti nama kolom freight_value menjadi shipping_cost
+order_df.rename(columns={"freight_value": "shipping_cost"}, inplace=True)
+print(order_df)
+
+
+# Tugas Praktik .group By menggunakan Pandas
+
+# mencari rata rata dari price per payment_type dari dataset order_df ("https://storage.googleapis.com/dqlab-dataset/order.csv")!
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Hitung rata rata dari price per payment_type
+rata_rata = order_df["price"].groupby(order_df["payment_type"]).mean()
+print(rata_rata)
+
+
+# Tugas Praktik Sorting menggunakan Pandas
+
+# cari berapa harga maksimum pembelian customer di dataset order_df
+import pandas as pd
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Hitung harga maksimum pembelian customer
+sort_harga = order_df.sort_values(by="harga", ascending="harga")
+print(sort_harga)
+
+
+### MINI PROJECT ###
+'''
+Berikut ya detailnya:
+
+  1. Median price yang dibayar customer dari masing-masing metode pembayaran.
+  2. Tentukan metode pembayaran yang memiliki basket size (rataan median price) terbesar.
+  3. Ubah freight_value menjadi shipping_cost dan cari shipping_cost termahal dari data penjualan tersebut menggunakan sort.
+  4. Untuk setiap product_category_name, berapa rata-rata weight produk tersebut dan standar deviasi mana yang terkecil dari weight tersebut,
+  5. Buat histogram quantity penjualan dari dataset tersebut untuk melihat persebaran quantity penjualan tersebut dengan bins = 5 dan figsize= (4,5)
+
+Khusus poin 4, tolong diperhatikan lebih ya, Aksara karena hasil analisisnya akan digunakan kepala cabang dalam menyusun strategi free ongkir.
+'''
+
+import pandas as pd
+import matplotlib.pyplot as plt
+order_df = pd.read_csv("https://storage.googleapis.com/dqlab-dataset/order.csv")
+# Median price yang dibayar customer dari masing-masing metode pembayaran. 
+median_price = order_df["payment_type"].groupby(order_df["price"]).median
+print(median_price)
+# Ubah freight_value menjadi shipping_cost dan cari shipping_cost 
+# termahal dari data penjualan tersebut menggunakan sort.
+order_df.rename(columns={"freight_value": "shipping_cost"}, inplace=True)
+sort_value = order_df.sort_values(by="shipping_cost", ascending=0)
+print(sort_value)
+# Untuk product_category_name, berapa  rata-rata weight produk tersebut 
+# dan standar deviasi mana yang terkecil dari weight tersebut, 
+mean_value = order_df["product_weight_gram"].groupby(order_df[ "product_category_name"]).mean()
+print(mean_value.sort_values())
+std_value = order_df["product_weight_gram"].groupby(order_df[ "product_category_name"]).std()
+print(std_value.sort_values())
+# Buat histogram quantity penjualan dari dataset tersebutuntuk melihat persebaran quantity 
+# penjualan tersebut dengan bins = 5 dan figsize= (4,5)
+order_df[["quantity"]].hist(figsize=(4, 5), bins=5)
+plt.show()
